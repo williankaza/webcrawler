@@ -1,0 +1,1 @@
+docker run --name mercadolibre-postgres -e POSTGRES_PASSWORD=docker -p 5434:5432 -d postgres 
