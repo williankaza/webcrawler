@@ -59,7 +59,9 @@ class AppearencesService{
 
             return urlRelationsRepository.save(newUrlRelation)
         } else {
-            
+            let urlRelation = arrRelations[0]
+            urlRelation.quantity++
+            return urlRelationsRepository.save(urlRelation)
         }
         return arrRelations
     }
@@ -68,7 +70,8 @@ class AppearencesService{
         arrResults: Array<IAppearencesReturn>, 
         newUrl: string, 
         level: number = 0, 
-        maxLevel=1): Promise<Array<IAppearencesReturn>>{
+        maxLevel=1,
+        searchURL: string = ""): Promise<Array<IAppearencesReturn>>{
         console.log("Level Atual: " + level + "| Maximo:" + maxLevel)
         if (maxLevel === level){
             return arrResults
@@ -85,8 +88,10 @@ class AppearencesService{
                         const fullUrl = this.buildUrl(href, newUrl);
         
                         console.log(fullUrl + " | Level:" + level + " | Max:" + maxLevel + " | From:" + newUrl)
-                        this.saveRelation(newUrl, fullUrl)
-                        arrResults = await this.addResult(arrResults, fullUrl, level, maxLevel)
+                        if (searchURL === "" || fullUrl === searchURL){
+                            await this.saveRelation(newUrl, fullUrl)
+                            arrResults = await this.addResult(arrResults, fullUrl, level, maxLevel)
+                        }
                     }
                 }
                 return arrResults;
@@ -160,63 +165,82 @@ class AppearencesService{
                 type: 'calculated'
             }
         } else {
-            const arrOccurrencesByDestination = await urlRelationsRepository.findByDestination(searchURL);
+            return await this.findOccurrenceBySimilarity(originURL, searchURL)
+        }
+    }
 
-            if (arrOccurrencesByDestination.length > 0){
-                const url = new URL(originURL)
-                const arrGroupedOccurrences = arrOccurrencesByDestination.reduce((acc, occurrence)=>{
-                    const itemOccurenceIndex = acc.findIndex(x=> x.url ==  occurrence.origin);
+    public async findOccurrenceBySimilarity(originURL: string, searchURL: string): Promise<IPredicition>{
+        const urlRelationsRepository = getCustomRepository(UrlRelationsRepository)
+        const arrOccurrencesByDestination = await urlRelationsRepository.findByDestination(searchURL);
 
-                    if (itemOccurenceIndex !== -1){
-                        acc[itemOccurenceIndex].quantity++;
-                    } else {
-                        acc = [... acc, {quantity: 1, url: occurrence.origin}]
-                    }
-                    return acc
-                }, new Array<ICalcPrediction>())
-                
-                var urlSubStr = originURL.substr(0,originURL.lastIndexOf('/'))
-                let resultFilter: Array<ICalcPrediction> = []
-                
-                try {
-                    while (resultFilter.length === 0 && new URL(urlSubStr)){
-                        resultFilter = arrGroupedOccurrences.filter(
-                            (occurrence)=>{
-                                return occurrence.url.indexOf(urlSubStr) > -1
-                            }
-                        )
-    
-                        if (resultFilter.length === 0){
-                            urlSubStr = urlSubStr.substr(0,urlSubStr.lastIndexOf('/'))
-                        } else {
+        if (arrOccurrencesByDestination.length > 0){
+            const url = new URL(originURL)
+            const arrGroupedOccurrences = arrOccurrencesByDestination.reduce((acc, occurrence)=>{
+                const itemOccurenceIndex = acc.findIndex(x=> x.url ==  occurrence.origin);
 
-                        }
-                    }
-
-                    if (resultFilter.length > 0){
-                        return {
-                            quantity: 0,
-                            type: 'predictedByDestination'
-                        }
-                    } else {
-                        return {
-                            quantity: -1,
-                            type: 'predictedByDestination'
-                        }
-                    }
-                    console.log(resultFilter)
-                } catch (error) {
-                    console.log(error)
-                    return {
-                        quantity: 0,
-                        type: 'error'
-                    }
+                if (itemOccurenceIndex !== -1){
+                    acc[itemOccurenceIndex].quantity++;
+                } else {
+                    acc = [... acc, {quantity: 1, url: occurrence.origin}]
                 }
-            } else {
+                return acc
+            }, new Array<ICalcPrediction>())
+            
+            var urlSubStr = originURL.substr(0,originURL.lastIndexOf('/'))
+            let resultFilter: Array<ICalcPrediction> = []
+            
+            try {
+                while (resultFilter.length === 0 && new URL(urlSubStr)){
+                    resultFilter = arrGroupedOccurrences.filter(
+                        (occurrence)=>{
+                            return occurrence.url.indexOf(urlSubStr) > -1
+                        }
+                    )
+
+                    if (resultFilter.length === 0){
+                        urlSubStr = urlSubStr.substr(0,urlSubStr.lastIndexOf('/'))
+                    } 
+                }
+
+                if (resultFilter.length > 0){
+                    const totalOccurrences = resultFilter.reduce((acc, occurrence)=>{
+                        acc += occurrence.quantity
+                        return acc
+                    },0)
+
+                    return {
+                        quantity: totalOccurrences/resultFilter.length,
+                        type: 'predictedByDestination'
+                    }
+                } else {
+                    return await this.findOccurrenceInOrigin(originURL, searchURL)
+                }
+            } catch (error) {
+                console.log(error)
                 return {
                     quantity: -1,
                     type: 'error'
                 }
+            }
+        } else {
+            return await this.findOccurrenceInOrigin(originURL, searchURL)
+        }
+    }
+
+    public async findOccurrenceInOrigin(originUrl: string, searchUrl: string): Promise<IPredicition>{
+        await this.findAppearences([],originUrl, 0, 1, searchUrl)
+        const urlRelationsRepository = getCustomRepository(UrlRelationsRepository)
+
+        const arrOccurrences = await urlRelationsRepository.findByOriginAndDestination(originUrl, searchUrl)
+        if (arrOccurrences.length > 0){
+            return {
+                quantity: arrOccurrences.length,
+                type: "extracted"
+            }
+        } else {
+            return {
+                quantity: 0,
+                type: "noOccurrence"
             }
         }
     }
