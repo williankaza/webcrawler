@@ -207,4 +207,8 @@ The chosen database is Postgres. Two entities were created, `appearences` and `u
 
 [pt-br]
 
-Para 
+Use o comando `docker-compose up`. Para utilizar a API ela está disponivel na porta `8080` enquanto o banco está na porta `11543`.
+
+[en-us]
+
+Use the `docker-compose up` command. To use the API it is available on port `8080` while the database is on port `11543`.
