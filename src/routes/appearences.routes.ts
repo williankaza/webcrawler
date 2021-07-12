@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { errorMsg, isNullOrUndefined } from "../generics/utils";
 import AppearencesService from "../services/appearences.service";
-import { IAppearencesReturn } from "../interfaces/appearences.interfaces";
 import { IPredicition } from "../interfaces/urlRelations.interfaces";
+import IAppearencesReturn from "../interfaces/IAppearencesReturn";
 
 const appearencesRouter = Router();
 const appearencesService = new AppearencesService()

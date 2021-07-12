@@ -1,6 +1,4 @@
-import { IAppearencesReturn } from "../interfaces/appearences.interfaces"
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { uuid } from "uuidv4";
 
 @Entity('appearences')
 class Appearences{

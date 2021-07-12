@@ -1,11 +1,12 @@
 import { isNullOrUndefined } from "../generics/utils";
-import { IAppearences, IAppearencesReturn } from "../interfaces/appearences.interfaces";
 import Appearences from "../models/Appearences";
 import UrlRelation from "../models/UrlRelation";
 import { getCustomRepository } from "typeorm";
 import AppearencesRepository from "../repository/AppearencesRepository";
 import UrlRelationsRepository from "../repository/UrlRelationsRepository";
 import { ICalcPrediction, IPredicition } from "../interfaces/urlRelations.interfaces";
+import IAppearences from "../interfaces/IAppearencesDTO";
+import IAppearencesReturn from "../interfaces/IAppearencesReturn";
 
 const http = require('http');
 const https = require('https');
@@ -52,7 +53,7 @@ class AppearencesService{
         const urlRelationsRepository = getCustomRepository(UrlRelationsRepository)
         const arrRelations = await urlRelationsRepository.findByOriginAndDestination(urlOrigem, urlDestino)
 
-        if (arrRelations.length > 0){
+        if (arrRelations.length >= 0){
             
             let newUrlRelation: UrlRelation = new UrlRelation();
             newUrlRelation.origin = urlOrigem
