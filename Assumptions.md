@@ -21,6 +21,8 @@ Caso não tenha encontrado, eu busco todas as ocorrências de `predictURL` como 
 Caso ainda assim ela não encontre, realizo a extração de `initialURL` buscando pela `predictURL`, se encontro retorno de imediato o resultado da extração, caso contrário retorno zerada a quantidade de ocorrências.
 
 E para os entregáveis fiquei em duvida sobre o Dockerfiles, se deveria ter feito somente até o Dockerfile, mas acabei por criar o DockerCompose para subir ambos os containeres (aplicação e banco de dados), fiquei na duvida pois não tenho muita pratica com Docker.
+
+Outro ponto é que acabei não gerando um versionamento mais detalhado, na correria acabei realizando muitas alterações no projeto antes de realizar o segundo commit, peço desculpas por isso
 ----
 
 # [en-us]
@@ -46,3 +48,5 @@ If not, I look for all occurrences of `predictURL` as `destination`, filtering t
 If it still doesn't find it, I perform the extraction of `initialURL` looking for the `predictURL`, if I find the result of the extraction immediately returned, otherwise the number of occurrences returns zero.
 
 And for the deliverables I was in doubt about the Dockerfiles, if I should have done only up to the Dockerfile, but I ended up creating the DockerCompose to upload both containers (application and database), I was in doubt because I don't have much practice with Docker.
+
+Another point is that I ended up not generating a more detailed versioning, in the rush I ended up making many changes to the project before performing the second commit, I apologize for that
