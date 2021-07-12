@@ -8,8 +8,6 @@ import { ICalcPrediction, IPredicition } from "../interfaces/urlRelations.interf
 import IAppearences from "../interfaces/IAppearencesDTO";
 import IAppearencesReturn from "../interfaces/IAppearencesReturn";
 
-const http = require('http');
-const https = require('https');
 const fetch = require('node-fetch');
 const getHrefs = require('get-hrefs');
 
@@ -44,7 +42,7 @@ class AppearencesService{
         )
     }
 
-    public async printRelations(){
+    public async getAllURLRelations(){
         const urlRelationsRepository = getCustomRepository(UrlRelationsRepository)
         return await urlRelationsRepository.find()
     }
@@ -53,13 +51,15 @@ class AppearencesService{
         const urlRelationsRepository = getCustomRepository(UrlRelationsRepository)
         const arrRelations = await urlRelationsRepository.findByOriginAndDestination(urlOrigem, urlDestino)
 
-        if (arrRelations.length >= 0){
+        if (arrRelations.length == 0){
             
             let newUrlRelation: UrlRelation = new UrlRelation();
             newUrlRelation.origin = urlOrigem
             newUrlRelation.destination = urlDestino
 
             return urlRelationsRepository.save(newUrlRelation)
+        } else {
+            
         }
         return arrRelations
     }

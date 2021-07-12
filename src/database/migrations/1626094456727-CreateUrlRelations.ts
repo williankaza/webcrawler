@@ -22,6 +22,11 @@ export class CreateUrlRelations1626094456727 implements MigrationInterface {
                     name: "destination",
                     type: "varchar",
                     isNullable: false
+                },
+                {
+                    name: "quantity",
+                    type: "int",
+                    default: 1
                 }
             ]            
         }))

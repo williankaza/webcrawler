@@ -23,10 +23,20 @@ class UrlRelationsRepository extends Repository<UrlRelation>{
         return findUrlRelation
     }
 
-    public async findByDestination(searchUrl: string){
+    public async findByLikeDestination(searchUrl: string){
         const  findUrlRelation = await this.find({
             where:{
                 destination: Like(`%${searchUrl}%`)
+            }
+        })
+
+        return findUrlRelation
+    }
+
+    public async findByDestination(searchUrl: string){
+        const  findUrlRelation = await this.find({
+            where:{
+                destination: searchUrl
             }
         })
 

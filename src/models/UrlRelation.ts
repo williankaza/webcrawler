@@ -11,6 +11,8 @@ class UrlRelation{
     @Column()
     destination: string;
 
+    @Column()
+    quantity: number;
 }
 
 export default UrlRelation;

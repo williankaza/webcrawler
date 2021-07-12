@@ -60,7 +60,7 @@ appearencesRouter.post('/predictions', async (request, response)=>{
 })
 
 appearencesRouter.get('/relations', async (request, response)=>{
-    return response.status(200).json({ response: await appearencesService.printRelations() })
+    return response.status(200).json({ response: await appearencesService.getAllURLRelations() })
 })
 
 export default appearencesRouter;
