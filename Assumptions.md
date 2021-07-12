@@ -17,7 +17,7 @@ Dado os seguintes valores:
     "predictURL": "https://www.google.com/doodles/gioachino-rossinis-220th-birthday-leap-year-2012"
 
 Inicialmente vou tentar encontrar a relação entre os dois, se encontrar, significa que a `predictURL` foi encontrada na `initialURL` e retorno ela.
-Caso não tenha encontrado, eu busco todas as ocorrências de `predictURL` como `destination`, filtrando as ocorrências pela `initialURL` até o ultima `/`, ou seja `https://www.google.com/doodles/`. Se encontrar, realizo a soma de todas as ocorrências e divido pelo numero de origens que contem esse relacionamento. Caso não encontre, vou reduzindo a `initialURL` até ser uma URL válida.
+Caso não tenha encontrado, eu busco todas as ocorrências de `predictURL` como `destination`, filtrando as ocorrências pela `initialURL` até o ultima `/`, ou seja `https://www.google.com/doodles/`. Se encontrar, realizo a soma de todas as ocorrências e divido pelo numero de origens que contem esse relacionamento. Caso não encontre, vou reduzindo a `initialURL` enquanto for uma URL válida.
 Caso ainda assim ela não encontre, realizo a extração de `initialURL` buscando pela `predictURL`, se encontro retorno de imediato o resultado da extração, caso contrário retorno zerada a quantidade de ocorrências.
 
 E para os entregáveis fiquei em duvida sobre o Dockerfiles, se deveria ter feito somente até o Dockerfile, mas acabei por criar o DockerCompose para subir ambos os containeres (aplicação e banco de dados), fiquei na duvida pois não tenho muita pratica com Docker.
@@ -44,7 +44,7 @@ Given the following values:
     "predictURL": "https://www.google.com/doodles/gioachino-rossinis-220th-birthday-leap-year-2012"
 
 Initially I'll try to find the relationship between the two, if I do, it means the `predictURL` was found in the `initialURL` and I return it.
-If not, I look for all occurrences of `predictURL` as `destination`, filtering the occurrences by `initialURL` to the last `/`, ie `https://www.google.com/doodles/`. If found, I sum all occurrences and divide by the number of sources that contain this relationship. If I don't find it, I'll reduce the `initialURL` until it's a valid URL.
+If not, I look for all occurrences of `predictURL` as `destination`, filtering the occurrences by `initialURL` to the last `/`, ie `https://www.google.com/doodles/`. If found, I sum all occurrences and divide by the number of sources that contain this relationship. If I don't find it, I'll reduce the `initialURL` as long as it's a valid URL.
 If it still doesn't find it, I perform the extraction of `initialURL` looking for the `predictURL`, if I find the result of the extraction immediately returned, otherwise the number of occurrences returns zero.
 
 And for the deliverables I was in doubt about the Dockerfiles, if I should have done only up to the Dockerfile, but I ended up creating the DockerCompose to upload both containers (application and database), I was in doubt because I don't have much practice with Docker.
